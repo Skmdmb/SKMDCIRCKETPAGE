@@ -54,15 +54,12 @@
    3) Do NOT publish a JSONBin Master Key in a public website.
       For public deployment, use a small backend/proxy instead.
    ========================================================= */
-// =========================
-// CONFIGURATION
-// =========================
-const ADMIN_PIN = "college123";
-
-const JSONBIN_BIN_ID = "YOUR_BIN_ID";
-const JSONBIN_MASTER_KEY = "YOUR_MASTER_KEY";
-
-const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}';
+const ADMIN_PIN = 'college123'; // CHANGE THIS
+const BIN_ID = '6af1c48dac6210605a79c766';
+const API_KEY = '$2a$10$oRfVdT35JR02aQ8RAvNHsu6T012bTREmhf6HKu5Y2y91ufSFhQdbe';
+const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const JSONBIN_URL = BIN_ID.startsWith('PASTE_') ? '' : API_URL;
+const JSONBIN_MASTER_KEY = API_KEY.startsWith('PASTE_') ? '' : API_KEY;
 
 const STORAGE_KEY = 'cricket_tournament_live_v1';
 const blankState = () => ({
@@ -104,9 +101,10 @@ async function syncCloud(){
     cloudBusy=true;
     try{
       const res=await fetch(JSONBIN_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_MASTER_KEY},body:JSON.stringify(state)});
-      if(!res.ok) throw new Error(`JSONBin returned ${res.status}`);
-      const el=document.getElementById('syncStatus'); if(el) el.textContent='Cloud synced';
-    }catch(e){console.error('Cloud sync failed:',e);const el=document.getElementById('syncStatus');if(el)el.textContent='Cloud sync failed';}
+      const body=await res.text();
+      if(!res.ok) throw new Error(`HTTP ${res.status}: ${body.slice(0,220)}`);
+      const el=document.getElementById('syncStatus'); if(el) el.textContent='Cloud synced ✓';
+    }catch(e){console.error('Cloud sync failed:',e);const el=document.getElementById('syncStatus');if(el)el.textContent=`Cloud sync failed — ${e.message}`;}
     finally{cloudBusy=false;}
   },250);
 }
@@ -114,7 +112,7 @@ async function refreshCloud(){
   if(!JSONBIN_URL || !JSONBIN_MASTER_KEY || isAdmin) return;
   try{
     const res=await fetch(JSONBIN_URL,{headers:{'X-Master-Key':JSONBIN_MASTER_KEY},cache:'no-store'});
-    if(!res.ok) throw new Error(`JSONBin returned ${res.status}`);
+    if(!res.ok) throw new Error(`JSONBin returned HTTP ${res.status}: ${(await res.text()).slice(0,180)}`);
     const data=await res.json();
     if(data && data.record){state={...blankState(),...data.record};saveLocal();render();}
   }catch(e){console.warn('Cloud refresh failed:',e);}
@@ -166,7 +164,7 @@ function renderDashboard(){
  const fixtures=state.fixtures.map((f,i)=>`<div class="teamline"><div><b>${esc(f.teamA)} vs ${esc(f.teamB)}</b><div class="muted small">${f.played?'Completed':'Scheduled'}</div></div><div class="actions">${!f.played?`<button class="primary" onclick="startMatch(${i})">Start</button>`:''}</div></div>`).join('')||'<div class="empty">No fixtures scheduled yet.</div>';
  const teams=state.tournamentTeams.map(t=>`<span class="pill">${esc(t)}</span>`).join(' ');
  return `<section class="card"><div class="center"><div class="eyebrow">Admin dashboard</div><h2>${esc(state.tourneyName)}</h2><span class="pill">${esc(state.status)}</span></div>
- <div class="notice">Local save is active. <span id="syncStatus">${JSONBIN_URL?'Cloud sync configured':'Cloud sync not configured'}</span>. Viewers on other devices need JSONBin configured.</div>
+ <div class="notice">Local save is active. <span id="syncStatus">${JSONBIN_URL&&JSONBIN_MASTER_KEY?'Cloud sync configured — waiting for first save':'Cloud sync not configured: add your Bin ID and key in the CONFIGURATION section'}</span>. Viewers on other devices need the same Bin ID and a valid read key configured.</div>
  <h3>Participating teams</h3><div class="row wrap">${teams}</div></section>
  <section class="card"><h2>Schedule a match</h2><div class="grid two"><div class="field"><label>Team A (bat first)</label><select id="teamA">${teamOptions()}</select></div><div class="field"><label>Team B (bowl first)</label><select id="teamB">${teamOptions()}</select></div></div><div class="field"><label>Overs for this match</label><input id="fixtureOvers" type="number" min="1" max="50" value="${state.maxOvers}"></div><button class="success" onclick="createFixture()">＋ Add fixture</button></section>
  <section class="card"><div class="row between"><h2>Fixtures</h2><button class="subtle" onclick="showPoints()">Points table</button></div>${fixtures}</section>
