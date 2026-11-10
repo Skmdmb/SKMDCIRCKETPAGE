@@ -11,7 +11,7 @@
           maximum-scale=1.0,
           user-scalable=no">
 
-    <title>Sunday League Live Skmd</title>
+    <title>Sunday League Live</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1162,93 +1162,138 @@ const API_URL = `https://api.npoint.io/${BIN_ID}`;
     // CLOUD SYNC
     // =========================
 
-    async function syncToCloud() {
-
-        if(!isAdmin) return;
-
-        try {
-
-            await fetch(API_URL, {
-
-                method: 'POST',
-
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-
-                body: JSON.stringify(state)
-
-            });
-
-        } catch (e) {
-
-            console.error("Sync Error");
-
-        }
-    }
-
-
     // =========================
-    // AUTO REFRESH
+    // CLOUD SYNC
     // =========================
 
-    async function autoRefresh() {
-
-        if(isAdmin) return;
-
+    async function loadCloudState() {
         try {
-
             const res = await fetch(API_URL, {
-
                 method: 'GET',
-
-                cache: 'no-cache'
-
+                cache: 'no-store'
             });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status} while loading cloud data`);
+            }
 
             const data = await res.json();
 
-            if(
-                data &&
-                data.tournamentTeams &&
-                data.tournamentTeams.length > 0
-            ) {
-
-                state = data;
-
-                render();
+            if (!data || typeof data !== 'object' || Array.isArray(data)) {
+                console.warn("Cloud data is empty or has an invalid format.");
+                return false;
             }
 
-        } catch(e) {
+            // Accept the saved tournament state, including a newly created/empty tournament.
+            if (!Array.isArray(data.tournamentTeams)) {
+                console.warn("Cloud data does not contain tournamentTeams.");
+                return false;
+            }
 
-            console.log("Refresh Error");
+            state = data;
+            render();
+            console.log("Cloud data loaded successfully.");
+            return true;
 
+        } catch (error) {
+            console.error("Cloud Load Failed:", error);
+            return false;
         }
     }
 
 
-    // AUTO REFRESH EVERY 3 SEC
+    async function syncToCloud() {
+        if (!isAdmin) {
+            console.warn("Cloud save skipped: Admin is not logged in.");
+            return false;
+        }
 
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(state)
+            });
+
+            const responseText = await res.text();
+
+            console.log("Cloud Sync HTTP Status:", res.status);
+            console.log("Cloud Sync Response:", responseText);
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${responseText || res.statusText}`);
+            }
+
+            console.log("Cloud Sync Successful.");
+            return true;
+
+        } catch (error) {
+            console.error("Cloud Sync Failed:", error);
+            alert("Cloud save failed. Open the browser console (F12) and check the error.\n\n" + error.message);
+            return false;
+        }
+    }
+
+
+    // =========================
+    // AUTO REFRESH FOR VIEWERS
+    // =========================
+
+    async function autoRefresh() {
+        // Do not replace an admin's in-progress edits with viewer refreshes.
+        if (isAdmin) return;
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'GET',
+                cache: 'no-store'
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status} while refreshing`);
+            }
+
+            const data = await res.json();
+
+            if (
+                data &&
+                typeof data === 'object' &&
+                Array.isArray(data.tournamentTeams)
+            ) {
+                state = data;
+                render();
+            }
+
+        } catch (error) {
+            console.error("Viewer Refresh Failed:", error);
+        }
+    }
+
+
+    // Refresh viewer display every 3 seconds.
     setInterval(autoRefresh, 3000);
 
 
-    // ON LOAD
-
+    // Load the latest cloud data when the page opens.
     window.onload = () => {
-
         autoRefresh();
-
     };
 
 // =========================
     // ADMIN PANEL
     // =========================
 
-    function toggleAdmin() {
+    async function toggleAdmin() {
 
-        if(!isAdmin) {
+        if (!isAdmin) {
 
-            if(prompt("Admin PIN:") === ADMIN_PASS) {
+            if (prompt("Admin PIN:") === ADMIN_PASS) {
+
+                // Load the latest saved tournament before enabling editing.
+                // This prevents an empty local state from overwriting cloud data.
+                await loadCloudState();
 
                 isAdmin = true;
 
@@ -1257,7 +1302,7 @@ const API_URL = `https://api.npoint.io/${BIN_ID}`;
 
                 // FIRST TIME SETUP
 
-                if(state.tournamentTeams.length === 0) {
+                if (!Array.isArray(state.tournamentTeams) || state.tournamentTeams.length === 0) {
 
                     document.getElementById('setupOverlay')
                         .classList.remove('hidden');
@@ -1266,7 +1311,7 @@ const API_URL = `https://api.npoint.io/${BIN_ID}`;
 
                 // NO MATCH
 
-                else if(!state.batTeam) {
+                else if (!state.batTeam) {
 
                     showMatchSelector();
 
