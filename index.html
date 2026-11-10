@@ -1,350 +1,1646 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0f172a">
-  <title>Cricket Tournament Live</title>
-  <style>
-    :root{color-scheme:dark;--bg:#0b1220;--panel:#172235;--panel2:#101a2b;--line:#2b3a50;--muted:#91a2b9;--yellow:#facc15;--blue:#2563eb;--green:#16a34a;--red:#dc2626}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8fafc;font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:40px}
-    button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 14px;font-weight:800;color:white;background:#334155}
-    button:disabled{opacity:.4;cursor:not-allowed}.primary{background:var(--blue)}.gold{background:var(--yellow);color:#111827}.success{background:var(--green)}.danger{background:var(--red)}.pink{background:#be185d}.purple{background:#7e22ce}.subtle{background:#263449}
-    .nav{position:sticky;top:0;z-index:5;background:#111c2e;border-bottom:1px solid var(--line);padding:13px max(16px,calc((100% - 900px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .brand{font-size:18px;font-weight:1000;letter-spacing:-.7px;color:var(--yellow);font-style:italic}.nav-actions{display:flex;gap:8px;flex-wrap:wrap}
-    main{max-width:900px;margin:0 auto;padding:20px 16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:19px;margin-bottom:16px;box-shadow:0 12px 28px #0002}
-    .hero{border-bottom:6px solid var(--yellow);text-align:center}.eyebrow{font-size:11px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:var(--yellow)}
-    h1,h2,h3,p{margin-top:0}h2{font-size:19px;margin-bottom:12px}h3{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#a9bad0;margin-bottom:10px}
-    .muted{color:var(--muted)}.small{font-size:12px}.score{font-size:56px;font-weight:1000;letter-spacing:-3px;line-height:1.1}.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.grid{display:grid;gap:12px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-    label{display:block;color:var(--muted);font-size:11px;font-weight:900;text-transform:uppercase;margin:0 0 6px}
-    input,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:white;border-radius:12px;padding:12px;outline:none;min-width:0}input:focus,select:focus{border-color:#60a5fa}
-    .field{margin-bottom:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions>*{flex:1}.pill{display:inline-block;border-radius:99px;padding:4px 9px;background:#263449;color:#cbd5e1;font-size:10px;font-weight:900}
-    .scorebox{background:#0e192a;border-radius:16px;padding:14px}.scorebox strong{display:block;font-size:19px}.teamline{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}.teamline:last-child{border:0}
-    .balls{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.ball{background:#334155;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:900}.ball.boundary{background:#1d4ed8}.ball.wicket{background:#991b1b}.ball.extra{background:#7e22ce}
-    .score-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.score-buttons button{min-height:48px}.score-buttons .wide{grid-column:span 2}
-    .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:520px;font-size:13px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}th{color:#a9bad0;font-size:10px;text-transform:uppercase;letter-spacing:.7px}
-    .player{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#0e192a;border-radius:12px;padding:10px;margin:6px 0}.player-actions{display:flex;gap:5px;flex-wrap:wrap}.player-actions button{font-size:10px;padding:6px 8px}
-    .notice{border:1px solid #854d0e;background:#42200655;color:#fde68a;border-radius:14px;padding:12px;font-size:12px;margin-bottom:14px}
-    .hidden{display:none!important}.center{text-align:center}.right{text-align:right}.empty{color:var(--muted);text-align:center;padding:18px;font-style:italic}
-    .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tabs button.active{background:var(--yellow);color:#111827}
-    footer{max-width:900px;margin:20px auto;padding:0 16px;color:#64748b;font-size:11px;text-align:center}
-    @media(max-width:560px){main{padding:14px 11px}.card{padding:15px;border-radius:18px}.score{font-size:48px}.two,.three{grid-template-columns:1fr 1fr}.nav{padding:11px}.brand{font-size:15px}.nav-actions button{font-size:10px;padding:9px}.score-buttons{grid-template-columns:repeat(4,1fr)}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunday League Live</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+* { box-sizing:border-box; }
+body {
+    margin:0;
+    background:#0f172a;
+    color:#f8fafc;
+    font-family:Arial,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+}
+button { cursor:pointer; }
+button:disabled { opacity:.35; cursor:not-allowed; }
+.no-scrollbar::-webkit-scrollbar { display:none; }
+.panel {
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:22px;
+}
+.action {
+    min-height:48px;
+    border-radius:12px;
+    font-weight:800;
+    font-size:14px;
+}
+.modal {
+    position:fixed;
+    inset:0;
+    z-index:100;
+    background:#020617ed;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+.hidden { display:none !important; }
+input,select {
+    width:100%;
+    background:#0f172a;
+    color:white;
+    padding:13px;
+    border:1px solid #475569;
+    border-radius:12px;
+    outline:none;
+    min-width:0;
+}
+table { width:100%; border-collapse:collapse; }
+td,th { padding:9px 5px; text-align:left; }
+@media(max-width:360px) {
+    .score-number { font-size:48px; }
+    .brand { font-size:19px; }
+}
+</style>
 </head>
-<body>
-  <nav class="nav">
-    <div class="brand">🏏 CRICKET LIVE</div>
-    <div class="nav-actions">
-      <button class="subtle" onclick="showPoints()">🏆 Table</button>
-      <button id="adminButton" onclick="adminLogin()">🔐 Admin</button>
+
+<body class="min-h-screen pb-12">
+
+<div class="max-w-xl mx-auto p-4">
+
+<!-- HEADER -->
+<header class="flex justify-between items-center gap-2 mb-6">
+    <h1 class="brand text-2xl font-black text-yellow-400">
+        Sunday League Live
+    </h1>
+
+    <button id="adminBtn" onclick="toggleAdmin()"
+        class="bg-yellow-500 text-black px-5 py-3 rounded-xl font-black text-sm">
+        ADMIN
+    </button>
+</header>
+
+<!-- CLOUD STATUS -->
+<div class="flex justify-between items-center mb-3 text-xs text-slate-400">
+    <span id="connectionStatus">Connecting...</span>
+    <span id="matchStatus">Viewer Mode</span>
+</div>
+
+<!-- WAITING -->
+<div id="waitingState" class="panel p-8 text-center mb-5">
+    <h2 class="text-xl font-black text-yellow-400 mb-2">
+        Sunday League Live
+    </h2>
+    <p class="text-slate-400 text-sm">
+        Waiting for the match to start...
+    </p>
+</div>
+
+<!-- PUBLIC SCOREBOARD -->
+<div id="mainDashboard" class="hidden">
+
+    <!-- SCORE -->
+    <div class="panel p-6 mb-5 text-center">
+        <p id="batTeamDisp"
+            class="text-yellow-400 font-black uppercase text-sm">
+            TEAM
+        </p>
+
+        <h2 id="dispScore"
+            class="score-number text-6xl font-black mt-3">
+            0/0
+        </h2>
+
+        <p class="text-slate-400 mt-3 text-lg">
+            Overs:
+            <span id="dispOvers">0.0</span>
+            /
+            <span id="limitOvers">5</span>
+        </p>
+
+        <div id="targetBox"
+            class="hidden mt-4 bg-yellow-500 text-black p-3 rounded-xl font-black">
+            Target: <span id="targetVal">0</span>
+        </div>
+
+        <p id="inningsLabel"
+            class="text-xs text-slate-400 mt-3">
+            First Innings
+        </p>
+
+        <p id="resultLabel"
+            class="hidden text-yellow-400 font-black mt-3">
+        </p>
     </div>
-  </nav>
-  <main><div id="app"><div class="empty">Loading tournament…</div></div></main>
-  <footer>Cricket Tournament Live · Save this file and open it in a modern browser.</footer>
+
+    <!-- BATSMEN -->
+    <div class="grid grid-cols-2 gap-3 mb-4">
+
+        <div class="panel p-4 border-l-4 border-blue-500">
+            <p class="text-[10px] text-blue-400 font-black uppercase">
+                Striker
+            </p>
+            <p id="dispSName"
+                class="font-bold text-base mt-2 truncate">---</p>
+            <p id="dispSStats"
+                class="text-3xl font-black">0(0)</p>
+        </div>
+
+        <div class="panel p-4 border-l-4 border-slate-500">
+            <p class="text-[10px] text-slate-400 font-black uppercase">
+                Non-Striker
+            </p>
+            <p id="dispNSName"
+                class="font-bold text-base mt-2 truncate">---</p>
+            <p id="dispNSStats"
+                class="text-3xl font-black">0(0)</p>
+        </div>
+    </div>
+
+    <!-- BOWLER -->
+    <div class="panel p-4 border-l-4 border-red-500 mb-5">
+        <p class="text-[10px] text-red-400 font-black uppercase">
+            Bowler
+        </p>
+        <p id="dispBName" class="font-bold text-lg mt-2">---</p>
+        <p id="dispBStats" class="text-3xl font-black">0-0 (0.0)</p>
+    </div>
+
+    <!-- BALL HISTORY -->
+    <div class="panel p-4 mb-5">
+        <p class="text-xs text-yellow-400 font-black mb-2">
+            RECENT BALLS
+        </p>
+        <div id="ballHistory"
+            class="flex gap-2 flex-wrap text-xs">
+            <span class="text-slate-500">No balls yet</span>
+        </div>
+    </div>
+
+    <!-- TEAM SCORECARDS -->
+    <div id="statsContent" class="space-y-4"></div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="scorerPanel" class="hidden space-y-5">
+
+    <div class="panel p-4">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="font-black text-yellow-400">ADMIN SCORER</h2>
+            <span class="text-xs text-green-400">EDIT ACCESS</span>
+        </div>
+
+        <p class="text-xs text-slate-400 mb-3">
+            Select the scoring action
+        </p>
+
+        <div id="btnGrid" class="grid grid-cols-4 gap-2">
+            <button onclick="handleRun(0)" class="action bg-slate-700">0</button>
+            <button onclick="handleRun(1)" class="action bg-slate-700">1</button>
+            <button onclick="handleRun(2)" class="action bg-slate-700">2</button>
+            <button onclick="handleRun(3)" class="action bg-slate-700">3</button>
+            <button onclick="handleRun(4)" class="action bg-blue-600">4</button>
+            <button onclick="handleRun(6)" class="action bg-green-600">6</button>
+            <button onclick="wideBall()" class="action bg-orange-600">WD</button>
+            <button onclick="noBall()" class="action bg-purple-600">NB</button>
+            <button onclick="handleWicket()" class="action bg-red-600">WKT</button>
+            <button onclick="undo()" class="action bg-slate-600">UNDO</button>
+        </div>
+
+        <p id="overWarning" class="hidden text-orange-400 text-xs mt-3">
+            Over completed. Assign the next bowler to continue.
+        </p>
+    </div>
+
+    <!-- TEAM TABS -->
+    <div class="panel p-3">
+        <h3 class="text-sm font-black mb-3">PLAYER MANAGEMENT</h3>
+
+        <div class="grid grid-cols-2 gap-2 mb-3">
+            <button id="adminTab1"
+                onclick="switchAdminTeam(1)"
+                class="bg-blue-700 p-3 rounded-xl text-xs font-black">
+                TEAM A
+            </button>
+
+            <button id="adminTab2"
+                onclick="switchAdminTeam(2)"
+                class="bg-slate-700 p-3 rounded-xl text-xs font-black">
+                TEAM B
+            </button>
+        </div>
+
+        <div class="flex gap-2">
+            <input id="newP" placeholder="Enter player name">
+            <button onclick="addP()"
+                class="bg-yellow-500 text-black px-5 rounded-xl font-black">
+                +
+            </button>
+        </div>
+
+        <div id="adminPList"
+            class="space-y-2 mt-4 max-h-72 overflow-y-auto no-scrollbar">
+        </div>
+    </div>
+
+    <!-- MATCH ACTIONS -->
+    <div class="panel p-4 space-y-2">
+        <h3 class="font-black text-yellow-400 mb-3">MATCH MANAGEMENT</h3>
+
+        <button onclick="togglePoints()"
+            class="w-full bg-slate-700 p-3 rounded-xl text-sm font-bold">
+            VIEW POINTS TABLE
+        </button>
+
+        <button onclick="resetMatchOnly()"
+            class="w-full bg-orange-900/60 p-3 rounded-xl text-sm font-bold">
+            CHANGE MATCH
+        </button>
+
+        <button onclick="fullSystemReset()"
+            class="w-full bg-red-900/60 p-3 rounded-xl text-sm font-bold">
+            TOTAL RESET
+        </button>
+    </div>
+
+</div>
+
+</div>
+
+<!-- TOURNAMENT SETUP -->
+<div id="setupOverlay" class="modal hidden">
+    <div class="panel p-6 w-full max-w-sm">
+        <h2 class="text-xl text-yellow-400 font-black text-center mb-5">
+            SEASON SETUP
+        </h2>
+
+        <div id="setupStep1" class="space-y-4">
+            <label class="text-xs text-slate-400 font-bold">
+                NUMBER OF TEAMS
+            </label>
+            <input id="numTeams" type="number" min="2" max="20" value="3">
+            <button onclick="generateTeamInputs()"
+                class="w-full bg-blue-600 p-3 rounded-xl font-black">
+                NEXT
+            </button>
+        </div>
+
+        <div id="setupStep2" class="hidden space-y-3">
+            <div id="teamNamesContainer"
+                class="space-y-2 max-h-52 overflow-y-auto"></div>
+
+            <label class="text-xs text-slate-400 font-bold">
+                OVERS PER INNINGS
+            </label>
+            <input id="setupOvers" type="number" min="1" value="5">
+
+            <button onclick="saveTournamentConfig()"
+                class="w-full bg-yellow-500 text-black p-3 rounded-xl font-black">
+                SAVE TOURNAMENT
+            </button>
+
+            <button onclick="cancelSetup()"
+                class="w-full bg-slate-700 p-3 rounded-xl">
+                CANCEL
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MATCH SELECTOR -->
+<div id="matchSelector" class="modal hidden">
+    <div class="panel p-6 w-full max-w-sm space-y-4">
+        <h2 class="text-xl font-black text-yellow-400 text-center">
+            SELECT MATCH
+        </h2>
+
+        <label class="text-xs text-slate-400">BATTING FIRST</label>
+        <select id="selectBatTeam"></select>
+
+        <label class="text-xs text-slate-400">BOWLING FIRST</label>
+        <select id="selectBowlTeam"></select>
+
+        <button onclick="startSpecificMatch()"
+            class="w-full bg-yellow-500 text-black p-3 rounded-xl font-black">
+            START MATCH
+        </button>
+    </div>
+</div>
+
+<!-- POINTS TABLE -->
+<div id="pointsOverlay" class="modal hidden">
+    <div class="panel p-5 w-full max-w-md">
+        <h2 class="text-xl text-yellow-400 font-black text-center mb-4">
+            STANDINGS
+        </h2>
+
+        <div class="overflow-x-auto">
+            <table class="text-xs">
+                <thead class="text-slate-400 border-b border-slate-600">
+                    <tr>
+                        <th>TEAM</th>
+                        <th>W</th>
+                        <th>L</th>
+                        <th>PTS</th>
+                    </tr>
+                </thead>
+                <tbody id="ptsBody"></tbody>
+            </table>
+        </div>
+
+        <button onclick="togglePoints()"
+            class="w-full mt-5 bg-slate-700 p-3 rounded-xl">
+            CLOSE
+        </button>
+    </div>
+</div>
 
 <script>
-'use strict';
+// ==================================================
+// 1. CONFIGURATION
+// ==================================================
 
-/* =========================================================
-   CONFIGURATION
-   =========================================================
-   1) Change ADMIN_PIN before using the app.
-   2) Optional cloud sync: create a JSONBin v3 bin and paste
-      its Bin ID and Master Key below.
-   3) Do NOT publish a JSONBin Master Key in a public website.
-      For public deployment, use a small backend/proxy instead.
-   ========================================================= */
-const ADMIN_PIN = 'college123'; // CHANGE THIS
-const BIN_ID = '6af1c48dac6210605a79c766';
-const API_KEY = '$2a$10$oRfVdT35JR02aQ8RAvNHsu6T012bTREmhf6HKu5Y2y91ufSFhQdbe';
-const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-const JSONBIN_URL = BIN_ID.startsWith('PASTE_') ? '' : API_URL;
-const JSONBIN_MASTER_KEY = API_KEY.startsWith('PASTE_') ? '' : API_KEY;
+const ADMIN_PASS = "college123";
 
-const STORAGE_KEY = 'cricket_tournament_live_v1';
-const blankState = () => ({
-  tourneyName:'Sunday League Championship', status:'Setup', maxOvers:5,
-  tournamentTeams:[], fixtures:[], players:[], points:{},
-  currentMatchId:null, match:null, completedMatches:[]
-});
-let state = loadLocal();
+const BIN_ID = "4477da91ccb09a87c2ae";
+
+const API_URL = `https://api.npoint.io/${BIN_ID}`;
+
 let isAdmin = false;
-let activeAdminTeam = '';
-let activeView = 'home';
-let undoStack = [];
-let cloudTimer = null;
-let cloudBusy = false;
+let activeAdminTeam = "";
+let history = [];
+let lastCloudJSON = "";
+let saving = false;
+let refreshTimer = null;
 
-function loadLocal(){
-  try { const raw=localStorage.getItem(STORAGE_KEY); return raw ? {...blankState(),...JSON.parse(raw)} : blankState(); }
-  catch(e){ console.warn('Could not load saved tournament',e); return blankState(); }
-}
-function saveLocal(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){console.warn(e);} }
-function snapshot(){ undoStack.push(JSON.stringify(state)); if(undoStack.length>30) undoStack.shift(); }
-function undoLast(){
-  if(!isAdmin || !undoStack.length) return alert('There is no scoring action to undo.');
-  state=JSON.parse(undoStack.pop()); saveLocal(); syncCloud(); render();
-}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function id(){return 'm'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function fmtOvers(balls){return `${Math.floor(balls/6)}.${balls%6}`;}
-function teamPlayers(team){return state.players.filter(p=>p.team===team);}
-function currentMatch(){return state.match;}
-function toast(msg){alert(msg);}
+// ==================================================
+// 2. INITIAL MATCH STATE
+// ==================================================
 
-async function syncCloud(){
-  saveLocal();
-  if(!JSONBIN_URL || !JSONBIN_MASTER_KEY || !isAdmin) return;
-  clearTimeout(cloudTimer);
-  cloudTimer=setTimeout(async()=>{
-    if(cloudBusy) return;
-    cloudBusy=true;
-    try{
-      const res=await fetch(JSONBIN_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_MASTER_KEY},body:JSON.stringify(state)});
-      const body=await res.text();
-      if(!res.ok) throw new Error(`HTTP ${res.status}: ${body.slice(0,220)}`);
-      const el=document.getElementById('syncStatus'); if(el) el.textContent='Cloud synced ✓';
-    }catch(e){console.error('Cloud sync failed:',e);const el=document.getElementById('syncStatus');if(el)el.textContent=`Cloud sync failed — ${e.message}`;}
-    finally{cloudBusy=false;}
-  },250);
+function createInitialState() {
+    return {
+        maxOvers: 5,
+        runs: 0,
+        wickers: 0,
+        balls: 0,
+        players: [],
+        sIdx: null,
+        nsIdx: null,
+        bIdx: null,
+        batTeam: "",
+        bowlTeam: "",
+        curBat: "",
+        curInn: 1,
+        target: null,
+        isOverWaiting: false,
+        matchEnded: false,
+        tournamentTeams: [],
+        points: {},
+        recentBalls: [],
+        result: ""
+    };
 }
-async function refreshCloud(){
-  if(!JSONBIN_URL || !JSONBIN_MASTER_KEY || isAdmin) return;
-  try{
-    const res=await fetch(JSONBIN_URL,{headers:{'X-Master-Key':JSONBIN_MASTER_KEY},cache:'no-store'});
-    if(!res.ok) throw new Error(`JSONBin returned HTTP ${res.status}: ${(await res.text()).slice(0,180)}`);
-    const data=await res.json();
-    if(data && data.record){state={...blankState(),...data.record};saveLocal();render();}
-  }catch(e){console.warn('Cloud refresh failed:',e);}
-}
-setInterval(refreshCloud,5000);
 
-function adminLogin(){
-  if(isAdmin){isAdmin=false;document.getElementById('adminButton').textContent='🔐 Admin';render();return;}
-  const pin=prompt('Enter admin PIN:');
-  if(pin===null)return;
-  if(pin===ADMIN_PIN){isAdmin=true;document.getElementById('adminButton').textContent='🔓 Logout';render();}
-  else alert('Incorrect PIN.');
-}
-function requireAdmin(){if(!isAdmin){alert('Admin access required.');return false;}return true;}
+let state = createInitialState();
 
-function render(){
-  const app=document.getElementById('app');
-  if(activeView==='points'){app.innerHTML=renderPoints();return;}
-  if(activeView==='scorecard'){app.innerHTML=renderScorecard();return;}
-  if(isAdmin && state.tournamentTeams.length===0){app.innerHTML=renderSetup();return;}
-  if(isAdmin && state.match && !state.match.finished){app.innerHTML=renderScoring();return;}
-  if(isAdmin){app.innerHTML=renderDashboard();return;}
-  app.innerHTML=renderViewer();
+// ==================================================
+// 3. ADMIN LOGIN
+// ==================================================
+
+async function toggleAdmin() {
+
+    if (!isAdmin) {
+
+        const password = prompt("Enter Admin Password:");
+
+        if (password === null) return;
+
+        if (password !== ADMIN_PASS) {
+            alert("Incorrect password");
+            return;
+        }
+
+        // Read latest cloud state before editing
+        const loaded = await loadCloud();
+
+        if (!loaded) {
+            alert("Could not load cloud data. Check your connection.");
+            return;
+        }
+
+        isAdmin = true;
+        document.getElementById("adminBtn").innerText = "LOGOUT";
+
+        document.getElementById("scorerPanel")
+            .classList.remove("hidden");
+
+        if (state.tournamentTeams.length === 0) {
+            document.getElementById("setupOverlay")
+                .classList.remove("hidden");
+        } else if (!state.batTeam) {
+            showMatchSelector();
+        }
+
+        render();
+
+    } else {
+
+        isAdmin = false;
+
+        document.getElementById("adminBtn").innerText = "ADMIN";
+
+        document.getElementById("scorerPanel")
+            .classList.add("hidden");
+
+        history = [];
+    }
 }
-function renderSetup(){
- return `<section class="card"><div class="center"><div class="eyebrow">Tournament setup</div><h2>Set up your league</h2><p class="muted small">Choose a name, overs and participating teams.</p></div>
- <div class="field"><label>Tournament name</label><input id="tourneyName" value="${esc(state.tourneyName)}" maxlength="60"></div>
- <div class="grid two"><div class="field"><label>Overs per innings</label><input id="maxOvers" type="number" min="1" max="50" value="${state.maxOvers}"></div><div class="field"><label>Number of teams (2–10)</label><input id="teamCount" type="number" min="2" max="10" value="4"></div></div>
- <button class="primary" onclick="makeTeamInputs()">Next: enter teams</button><div id="teamStep"></div></section>`;
+
+// ==================================================
+// 4. CLOUD SAVE
+// ==================================================
+
+async function syncToCloud() {
+
+    if (!isAdmin || saving) return false;
+
+    saving = true;
+    document.getElementById("connectionStatus").innerText =
+        "Saving...";
+
+    try {
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(state)
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                "HTTP " + response.status + " - " +
+                await response.text()
+            );
+        }
+
+        lastCloudJSON = JSON.stringify(state);
+
+        document.getElementById("connectionStatus").innerText =
+            "Cloud synced";
+
+        return true;
+
+    } catch (error) {
+
+        console.error("Cloud save failed:", error);
+
+        document.getElementById("connectionStatus").innerText =
+            "Cloud save failed";
+
+        alert(
+            "Cloud update failed. Check whether npoint API editing is enabled.\n\n" +
+            error.message
+        );
+
+        return false;
+
+    } finally {
+        saving = false;
+    }
 }
-function makeTeamInputs(){
- const n=Number(document.getElementById('teamCount').value);
- if(!Number.isInteger(n)||n<2||n>10)return alert('Enter between 2 and 10 teams.');
- state.tourneyName=document.getElementById('tourneyName').value.trim()||'Sunday League';
- state.maxOvers=Number(document.getElementById('maxOvers').value);
- if(!Number.isInteger(state.maxOvers)||state.maxOvers<1||state.maxOvers>50)return alert('Overs must be between 1 and 50.');
- document.getElementById('teamStep').innerHTML=`<div class="card" style="margin:16px 0 0"><h3>Name your teams</h3>${Array.from({length:n},(_,i)=>`<div class="field"><label>Team ${i+1}</label><input class="teamName" value="Team ${i+1}" maxlength="35"></div>`).join('')}<button class="gold" onclick="saveSetup()">Save tournament</button></div>`;
+
+// ==================================================
+// 5. CLOUD LOAD FOR VIEWERS
+// ==================================================
+
+async function loadCloud() {
+
+    try {
+
+        const response = await fetch(
+            API_URL + "?t=" + Date.now(),
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!data || !Array.isArray(data.players) ||
+            !Array.isArray(data.tournamentTeams)) {
+            throw new Error("Invalid match data");
+        }
+
+        state = {
+            ...createInitialState(),
+            ...data
+        };
+
+        lastCloudJSON = JSON.stringify(state);
+
+        render();
+
+        document.getElementById("connectionStatus").innerText =
+            "Connected to cloud";
+
+        return true;
+
+    } catch (error) {
+
+        console.error("Cloud load failed:", error);
+
+        document.getElementById("connectionStatus").innerText =
+            "Connection error";
+
+        return false;
+    }
 }
-function saveSetup(){
- const names=[...document.querySelectorAll('.teamName')].map(x=>x.value.trim()).filter(Boolean);
- if(names.length<2)return alert('Enter at least two team names.');
- if(new Set(names.map(x=>x.toLowerCase())).size!==names.length)return alert('Team names must be unique.');
- state.tourneyName=document.getElementById('tourneyName').value.trim()||state.tourneyName;
- state.tournamentTeams=names;state.status='Upcoming';state.points={};
- names.forEach(t=>state.points[t]={played:0,won:0,lost:0,tied:0,nr:0,points:0,forRuns:0,forBalls:0,againstRuns:0,againstBalls:0});
- saveLocal();syncCloud();render();
+
+async function autoRefresh() {
+
+    if (isAdmin) return;
+
+    await loadCloud();
 }
-function renderDashboard(){
- const fixtures=state.fixtures.map((f,i)=>`<div class="teamline"><div><b>${esc(f.teamA)} vs ${esc(f.teamB)}</b><div class="muted small">${f.played?'Completed':'Scheduled'}</div></div><div class="actions">${!f.played?`<button class="primary" onclick="startMatch(${i})">Start</button>`:''}</div></div>`).join('')||'<div class="empty">No fixtures scheduled yet.</div>';
- const teams=state.tournamentTeams.map(t=>`<span class="pill">${esc(t)}</span>`).join(' ');
- return `<section class="card"><div class="center"><div class="eyebrow">Admin dashboard</div><h2>${esc(state.tourneyName)}</h2><span class="pill">${esc(state.status)}</span></div>
- <div class="notice">Local save is active. <span id="syncStatus">${JSONBIN_URL&&JSONBIN_MASTER_KEY?'Cloud sync configured — waiting for first save':'Cloud sync not configured: add your Bin ID and key in the CONFIGURATION section'}</span>. Viewers on other devices need the same Bin ID and a valid read key configured.</div>
- <h3>Participating teams</h3><div class="row wrap">${teams}</div></section>
- <section class="card"><h2>Schedule a match</h2><div class="grid two"><div class="field"><label>Team A (bat first)</label><select id="teamA">${teamOptions()}</select></div><div class="field"><label>Team B (bowl first)</label><select id="teamB">${teamOptions()}</select></div></div><div class="field"><label>Overs for this match</label><input id="fixtureOvers" type="number" min="1" max="50" value="${state.maxOvers}"></div><button class="success" onclick="createFixture()">＋ Add fixture</button></section>
- <section class="card"><div class="row between"><h2>Fixtures</h2><button class="subtle" onclick="showPoints()">Points table</button></div>${fixtures}</section>
- <section class="card"><h2>Completed matches</h2>${state.completedMatches.length?state.completedMatches.map(m=>`<div class="teamline"><div><b>${esc(m.teamA)} vs ${esc(m.teamB)}</b><div class="muted small">${esc(m.result)}</div></div><button class="subtle" onclick="viewCompleted('${m.id}')">Scorecard</button></div>`).join(''):'<div class="empty">No completed matches yet.</div>'}</section>`;
+
+setInterval(autoRefresh, 3000);
+
+// ==================================================
+// 6. TOURNAMENT SETUP
+// ==================================================
+
+function generateTeamInputs() {
+
+    const num = Number(document.getElementById("numTeams").value);
+
+    if (!Number.isInteger(num) || num < 2 || num > 20) {
+        alert("Enter between 2 and 20 teams");
+        return;
+    }
+
+    const container =
+        document.getElementById("teamNamesContainer");
+
+    container.innerHTML = "";
+
+    for (let i = 1; i <= num; i++) {
+
+        const input = document.createElement("input");
+
+        input.className = "team-input";
+
+        input.placeholder = "Team " + i + " Name";
+
+        input.value = "Team " + i;
+
+        container.appendChild(input);
+    }
+
+    document.getElementById("setupStep1")
+        .classList.add("hidden");
+
+    document.getElementById("setupStep2")
+        .classList.remove("hidden");
 }
-function teamOptions(){return state.tournamentTeams.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');}
-function createFixture(){
- if(!requireAdmin())return;
- const a=document.getElementById('teamA').value,b=document.getElementById('teamB').value,o=Number(document.getElementById('fixtureOvers').value);
- if(!a||!b||a===b)return alert('Choose two different teams.');
- if(!Number.isInteger(o)||o<1||o>50)return alert('Overs must be between 1 and 50.');
- state.fixtures.push({id:id(),teamA:a,teamB:b,overs:o,played:false});saveLocal();syncCloud();render();
+
+function cancelSetup() {
+
+    document.getElementById("setupOverlay")
+        .classList.add("hidden");
+
+    document.getElementById("setupStep2")
+        .classList.add("hidden");
+
+    document.getElementById("setupStep1")
+        .classList.remove("hidden");
 }
-function startMatch(index){
- if(!requireAdmin())return;
- const f=state.fixtures[index];if(!f||f.played)return;
- if(state.match&&!state.match.finished&&!confirm('A match is currently active. Replace it?'))return;
- snapshot();
- state.currentMatchId=f.id;
- state.match={id:f.id,fixtureIndex:index,teamA:f.teamA,teamB:f.teamB,batTeam:f.teamA,bowlTeam:f.teamB,innings:1,overs:f.overs,runs:0,wickets:0,legalBalls:0,target:null,balls:[],striker:null,nonStriker:null,bowler:null,inningsData:[],finished:false,result:'',startedAt:Date.now()};
- state.status='Live';activeAdminTeam=f.teamA;saveLocal();syncCloud();render();
+
+async function saveTournamentConfig() {
+
+    if (!isAdmin) return;
+
+    const names = Array.from(
+        document.querySelectorAll(".team-input")
+    ).map(input => input.value.trim());
+
+    if (names.some(name => !name) ||
+        new Set(names.map(n => n.toLowerCase())).size !== names.length) {
+        alert("Enter unique team names");
+        return;
+    }
+
+    state.tournamentTeams = names;
+
+    state.maxOvers = Math.max(
+        1,
+        Number(document.getElementById("setupOvers").value) || 5
+    );
+
+    state.points = {};
+
+    names.forEach(team => {
+        state.points[team] = { w: 0, l: 0, p: 0 };
+    });
+
+    document.getElementById("setupOverlay")
+        .classList.add("hidden");
+
+    await syncToCloud();
+
+    showMatchSelector();
 }
-function renderScoring(){
- const m=currentMatch();if(!m)return renderDashboard();
- const striker=playerById(m.striker),ns=playerById(m.nonStriker),bowler=playerById(m.bowler);
- const batting=teamPlayers(m.batTeam),bowling=teamPlayers(m.bowlTeam);
- const playerRows=state.players.filter(p=>p.team===activeAdminTeam).map(p=>`<div class="player"><div><b>${esc(p.name)}</b><div class="muted small">${esc(p.team)}${p.isOut?' · OUT':''}</div></div><div class="player-actions">${p.team===m.batTeam&&!p.isOut?`<button class="subtle" onclick="assignPlayer('${p.id}','striker')">STR</button><button class="subtle" onclick="assignPlayer('${p.id}','nonStriker')">NON</button>`:''}${p.team===m.bowlTeam?`<button class="subtle" onclick="assignPlayer('${p.id}','bowler')">BOWL</button>`:''}</div></div>`).join('')||'<div class="empty">Add players to this team.</div>';
- return `<section class="card hero"><div class="row between"><span class="eyebrow">${esc(state.tourneyName)}</span><span class="pill">Innings ${m.innings}</span></div><h2>${esc(m.batTeam)} vs ${esc(m.bowlTeam)}</h2><div class="score">${m.runs}/${m.wickets}</div><p class="muted">Overs ${fmtOvers(m.legalBalls)} / ${m.overs} · ${m.innings===2?`Target: ${m.target}`:'First innings'}</p>${m.innings===2?`<p class="small muted">Need ${Math.max(0,m.target-m.runs)} from ${Math.max(0,m.overs*6-m.legalBalls)} balls</p>`:''}<div class="balls">${m.balls.map(b=>`<span class="ball ${b==='W'?'wicket':['4','6'].includes(String(b))?'boundary':['WD','NB'].includes(b)?'extra':''}">${esc(b)}</span>`).join('')}</div></section>
- <section class="grid three"><div class="scorebox"><label>Striker</label><strong>${striker?esc(striker.name):'Not set'}</strong><span class="muted small">${striker?`${striker.runs} (${striker.balls})`:''}</span></div><div class="scorebox"><label>Non-striker</label><strong>${ns?esc(ns.name):'Not set'}</strong><span class="muted small">${ns?`${ns.runs} (${ns.balls})`:''}</span></div><div class="scorebox"><label>Bowler</label><strong>${bowler?esc(bowler.name):'Not set'}</strong><span class="muted small">${bowler?`${fmtOvers(bowler.legalBalls)} · ${bowler.conceded}R · ${bowler.wickets}W`:''}</span></div></section>
- <section class="card"><h2>Record delivery</h2><div class="score-buttons">
- <button onclick="scoreRuns(0)">0</button><button onclick="scoreRuns(1)">1</button><button onclick="scoreRuns(2)">2</button><button onclick="scoreRuns(3)">3</button>
- <button class="primary" onclick="scoreRuns(4)">4</button><button class="success" onclick="scoreRuns(6)">6</button><button class="danger" onclick="scoreWicket()">WICKET</button><button class="pink" onclick="scoreWide()">WIDE</button>
- <button class="purple wide" onclick="scoreNoBall()">NO BALL</button><button class="subtle wide" onclick="undoLast()">↶ Undo last action</button>
- </div><p class="muted small" style="margin:12px 0 0">Wide/no-ball add one extra and do not count as a legal ball. No-ball button records the automatic one run only; add bat runs separately with the next scoring action if needed.</p></section>
- <section class="card"><h2>Players & roles</h2><div class="tabs"><button class="${activeAdminTeam===m.batTeam?'active':''}" onclick="switchAdminTeam('${esc(m.batTeam)}')">${esc(m.batTeam)}</button><button class="${activeAdminTeam===m.bowlTeam?'active':''}" onclick="switchAdminTeam('${esc(m.bowlTeam)}')">${esc(m.bowlTeam)}</button></div><div class="row"><input id="newPlayer" placeholder="Player name" maxlength="40"><button class="gold" onclick="addPlayer()">＋ Add</button></div>${playerRows}</section>
- <section class="card"><h2>Match controls</h2><div class="actions"><button class="subtle" onclick="showScorecard()">Scorecard</button><button class="danger" onclick="endMatchEarly()">End match</button><button class="subtle" onclick="backDashboard()">Dashboard</button></div></section>`;
+
+// ==================================================
+// 7. MATCH SELECTION
+// ==================================================
+
+function showMatchSelector() {
+
+    const bat = document.getElementById("selectBatTeam");
+    const bowl = document.getElementById("selectBowlTeam");
+
+    bat.innerHTML = "";
+    bowl.innerHTML = "";
+
+    state.tournamentTeams.forEach(team => {
+
+        const option1 = new Option(team, team);
+        const option2 = new Option(team, team);
+
+        bat.add(option1);
+        bowl.add(option2);
+    });
+
+    if (bat.options.length > 1) {
+        bowl.selectedIndex = 1;
+    }
+
+    document.getElementById("matchSelector")
+        .classList.remove("hidden");
 }
-function playerById(pid){return state.players.find(p=>p.id===pid)||null;}
-function switchAdminTeam(t){activeAdminTeam=t;render();}
-function addPlayer(){
- if(!requireAdmin())return;const input=document.getElementById('newPlayer'),name=input.value.trim();if(!name)return;
- state.players.push({id:id(),name,team:activeAdminTeam,runs:0,balls:0,isOut:false,dismissal:'',fours:0,sixes:0,conceded:0,legalBalls:0,wickets:0});
- saveLocal();syncCloud();render();
+
+async function startSpecificMatch() {
+
+    if (!isAdmin) return;
+
+    const bat = document.getElementById("selectBatTeam").value;
+    const bowl = document.getElementById("selectBowlTeam").value;
+
+    if (!bat || !bowl || bat === bowl) {
+        alert("Select two different teams");
+        return;
+    }
+
+    saveUndo();
+
+    state.batTeam = bat;
+    state.bowlTeam = bowl;
+    state.curBat = bat;
+
+    state.runs = 0;
+    state.wickers = 0;
+    state.balls = 0;
+    state.players = [];
+
+    state.sIdx = null;
+    state.nsIdx = null;
+    state.bIdx = null;
+
+    state.curInn = 1;
+    state.target = null;
+    state.isOverWaiting = false;
+    state.matchEnded = false;
+    state.result = "";
+    state.recentBalls = [];
+
+    activeAdminTeam = bat;
+
+    document.getElementById("matchSelector")
+        .classList.add("hidden");
+
+    render();
+    await syncToCloud();
 }
-function assignPlayer(pid,role){
- if(!requireAdmin())return;const m=currentMatch(),p=playerById(pid);if(!m||!p)return;
- if(role==='striker'||role==='nonStriker'){
-   if(p.team!==m.batTeam||p.isOut)return alert('Select an available batter from the batting team.');
-   if(role==='striker'&&pid===m.nonStriker)m.nonStriker=m.striker;
-   if(role==='nonStriker'&&pid===m.striker)m.striker=m.nonStriker;
-   m[role]=pid;
- }else{
-   if(p.team!==m.bowlTeam)return alert('Select a bowler from the bowling team.');
-   m.bowler=pid;
- }
- saveLocal();syncCloud();render();
+
+// ==================================================
+// 8. UNDO HISTORY
+// ==================================================
+
+function saveUndo() {
+
+    history.push(JSON.stringify(state));
+
+    if (history.length > 100) {
+        history.shift();
+    }
 }
-function needRoles(){
- const m=currentMatch();
- if(!m.striker||!m.nonStriker||!m.bowler){alert('Assign a striker, non-striker and bowler before scoring.');return false;}
- if(m.striker===m.nonStriker){alert('Striker and non-striker must be different players.');return false;}
- const s=playerById(m.striker),n=playerById(m.nonStriker),b=playerById(m.bowler);
- if(!s||!n||!b||s.isOut||n.isOut||s.team!==m.batTeam||n.team!==m.batTeam||b.team!==m.bowlTeam){alert('Please assign valid player roles.');return false;}
- return true;
+
+async function undo() {
+
+    if (!isAdmin || history.length === 0) return;
+
+    state = JSON.parse(history.pop());
+
+    render();
+    await syncToCloud();
 }
-function pushBall(label,legal=true){const m=currentMatch();m.balls.push(label);if(legal)m.legalBalls++;if(m.balls.length>12)m.balls.shift();}
-function swapBatters(){const m=currentMatch();[m.striker,m.nonStriker]=[m.nonStriker,m.striker];}
-function overComplete(){const m=currentMatch();return m.legalBalls>0&&m.legalBalls%6===0;}
-function scoreRuns(r){
- if(!requireAdmin()||!needRoles())return;snapshot();const m=currentMatch(),s=playerById(m.striker),b=playerById(m.bowler);
- m.runs+=r;s.runs+=r;s.balls++;if(r===4)s.fours++;if(r===6)s.sixes++;
- b.conceded+=r;b.legalBalls++;pushBall(String(r),true);
- if(r%2===1)swapBatters();
- afterDelivery();saveLocal();syncCloud();render();
+
+// ==================================================
+// 9. ADD PLAYER
+// ==================================================
+
+async function addP() {
+
+    if (!isAdmin) return;
+
+    const name =
+        document.getElementById("newP").value.trim();
+
+    if (!name) return;
+
+    if (state.players.some(
+        p => p.team === activeAdminTeam &&
+             p.name.toLowerCase() === name.toLowerCase()
+    )) {
+        alert("Player already exists");
+        return;
+    }
+
+    saveUndo();
+
+    state.players.push({
+        name,
+        team: activeAdminTeam,
+        r: 0,
+        b: 0,
+        w: 0,
+        rc: 0,
+        bb: 0,
+        isOut: false
+    });
+
+    document.getElementById("newP").value = "";
+
+    render();
+    await syncToCloud();
 }
-function scoreWide(){
- if(!requireAdmin())return;const m=currentMatch();if(!m.bowler)return alert('Assign a bowler first.');
- snapshot();m.runs++;playerById(m.bowler).conceded++;pushBall('WD',false);
- afterDelivery();saveLocal();syncCloud();render();
+
+// ==================================================
+// 10. PLAYER ASSIGNMENT
+// ==================================================
+
+function switchAdminTeam(side) {
+
+    if (!isAdmin) return;
+
+    activeAdminTeam =
+        side === 1 ? state.batTeam : state.bowlTeam;
+
+    renderAdminList();
 }
-function scoreNoBall(){
- if(!requireAdmin()||!needRoles())return;snapshot();const m=currentMatch(),s=playerById(m.striker),b=playerById(m.bowler);
- m.runs++;b.conceded++;s.runs++;pushBall('NB',false);
- afterDelivery();saveLocal();syncCloud();render();
+
+async function setField(index, role) {
+
+    if (!isAdmin || state.matchEnded) return;
+
+    const player = state.players[index];
+
+    if (!player) return;
+
+    if (role === "S" || role === "NS") {
+
+        if (player.team !== state.curBat || player.isOut) {
+            alert("Select an available batter from the batting team");
+            return;
+        }
+
+        if (role === "S" && index === state.nsIdx) {
+            alert("Player is already non-striker");
+            return;
+        }
+
+        if (role === "NS" && index === state.sIdx) {
+            alert("Player is already striker");
+            return;
+        }
+    }
+
+    if (role === "B" && player.team === state.curBat) {
+        alert("Select a bowler from the bowling team");
+        return;
+    }
+
+    saveUndo();
+
+    if (role === "S") state.sIdx = index;
+    if (role === "NS") state.nsIdx = index;
+
+    if (role === "B") {
+        state.bIdx = index;
+        state.isOverWaiting = false;
+    }
+
+    render();
+    await syncToCloud();
 }
-function scoreWicket(){
- if(!requireAdmin()||!needRoles())return;snapshot();const m=currentMatch(),s=playerById(m.striker),b=playerById(m.bowler);
- m.wickets++;s.balls++;s.isOut=true;s.dismissal=`b ${b.name}`;b.legalBalls++;b.wickets++;pushBall('W',true);
- m.striker=null;
- afterDelivery(true);saveLocal();syncCloud();render();
+
+// ==================================================
+// 11. STRIKE ROTATION
+// ==================================================
+
+function swap() {
+
+    const temp = state.sIdx;
+
+    state.sIdx = state.nsIdx;
+    state.nsIdx = temp;
 }
-function afterDelivery(wicket=false){
- const m=currentMatch();
- if(overComplete()){swapBatters();m.bowler=null;}
- if(m.innings===2&&m.runs>=m.target){finishMatch(`${m.batTeam} won by ${10-m.wickets} wicket${10-m.wickets===1?'':'s'}.`);return;}
- if(m.legalBalls>=m.overs*6||m.wickets>=10){
-   if(m.innings===1){completeInningsOne();}
-   else{
-     if(m.runs===m.target-1)finishMatch('Match tied.');
-     else finishMatch(`${m.bowlTeam} won by ${m.target-1-m.runs} run${m.target-1-m.runs===1?'':'s'}.`);
-   }
- }
+
+// ==================================================
+// 12. RECENT BALLS
+// ==================================================
+
+function addBallHistory(label) {
+
+    state.recentBalls ||= [];
+
+    state.recentBalls.push(label);
+
+    if (state.recentBalls.length > 12) {
+        state.recentBalls.shift();
+    }
 }
-function completeInningsOne(){
- const m=currentMatch();m.inningsData.push(captureInnings());m.target=m.runs+1;
- m.innings=2;[m.batTeam,m.bowlTeam]=[m.bowlTeam,m.batTeam];m.runs=0;m.wickets=0;m.legalBalls=0;m.balls=[];m.striker=null;m.nonStriker=null;m.bowler=null;
- alert(`First innings complete. Target: ${m.target}`);
+
+// ==================================================
+// 13. LEGAL BALL / OVER
+// ==================================================
+
+function legalBall() {
+
+    state.balls++;
+
+    if (state.balls % 6 === 0) {
+
+        state.isOverWaiting = true;
+
+        swap();
+    }
 }
-function captureInnings(){
- const m=currentMatch();
- return {team:m.batTeam,runs:m.runs,wickets:m.wickets,legalBalls:m.legalBalls,target:m.target,
- batters:state.players.filter(p=>p.team===m.batTeam).map(p=>({...p})),
- bowlers:state.players.filter(p=>p.team===m.bowlTeam).map(p=>({...p}))};
+
+// ==================================================
+// 14. NORMAL RUNS
+// ==================================================
+
+async function handleRun(run) {
+
+    if (!isAdmin || state.matchEnded) return;
+
+    if (state.isOverWaiting) {
+        return alert("Select the next bowler first");
+    }
+
+    if (state.sIdx === null ||
+        state.nsIdx === null ||
+        state.bIdx === null) {
+        return alert("Assign both batters and bowler");
+    }
+
+    saveUndo();
+
+    const striker = state.players[state.sIdx];
+    const bowler = state.players[state.bIdx];
+
+    state.runs += run;
+
+    striker.r += run;
+    striker.b++;
+
+    bowler.rc += run;
+    bowler.bb++;
+
+    if (run % 2 !== 0) swap();
+
+    legalBall();
+
+    addBallHistory(String(run));
+
+    render();
+    await syncToCloud();
+
+    checkLogic();
 }
-function endMatchEarly(){
- if(!requireAdmin())return;if(!confirm('End this match now?'))return;
- const m=currentMatch();
- if(m.innings===1){m.inningsData.push(captureInnings());finishMatch(`${m.teamA} vs ${m.teamB} — match ended early (no result).`,true);}
- else finishMatch(m.runs>=m.target?`${m.batTeam} won.`:'Match ended early (no result).',true);
+
+// ==================================================
+// 15. DISMISS A BATTER
+// ==================================================
+
+function dismissBatter(role) {
+
+    const index = role === "S" ? state.sIdx : state.nsIdx;
+
+    if (index === null || !state.players[index]) return;
+
+    state.players[index].isOut = true;
+
+    state.wickers++;
+
+    if (role === "S") state.sIdx = null;
+    else state.nsIdx = null;
 }
-function finishMatch(result,noResult=false){
- const m=currentMatch();if(m.finished)return;
- m.inningsData.push(captureInnings());
- m.finished=true;m.result=result;
- const f=state.fixtures[m.fixtureIndex];if(f)f.played=true;
- const a=m.teamA,b=m.teamB,pa=state.points[a],pb=state.points[b];
- if(pa&&pb){
-  pa.played++;pb.played++;
-  if(noResult){pa.nr++;pb.nr++;pa.points++;pb.points++;}
-  else if(result==='Match tied.'){pa.tied++;pb.tied++;pa.points++;pb.points++;}
-  else if(result.startsWith(a+' won')){pa.won++;pb.lost++;pa.points+=2;}
-  else if(result.startsWith(b+' won')){pb.won++;pa.lost++;pb.points+=2;}
- }
- updateNetRunRate(m);
- state.completedMatches.push({id:m.id,teamA:a,teamB:b,result,inningsData:m.inningsData,overs:m.overs});
- state.status='Completed';state.match=m;saveLocal();syncCloud();activeView='home';render();alert(result);
+
+// ==================================================
+// 16. RUN OUT HANDLING
+// ==================================================
+
+function runOutPrompt() {
+
+    const answer = prompt(
+        "Run out? Type S for striker, NS for non-striker, or N for no wicket",
+        "N"
+    );
+
+    if (!answer) return false;
+
+    const choice = answer.trim().toUpperCase();
+
+    if (choice === "S") {
+        dismissBatter("S");
+        return true;
+    }
+
+    if (choice === "NS") {
+        dismissBatter("NS");
+        return true;
+    }
+
+    return false;
 }
-function updateNetRunRate(m){
- // NRR uses completed innings totals; an all-out innings is treated as full quota.
- const inn=m.inningsData;
- if(inn.length<2)return;
- const first=inn[0],second=inn[1];
- const a=state.points[first.team],b=state.points[second.team];if(!a||!b)return;
- const aBalls=first.wickets>=10?m.overs*6:first.legalBalls;
- const bBalls=second.wickets>=10?m.overs*6:second.legalBalls;
- a.forRuns+=first.runs;a.forBalls+=aBalls;a.againstRuns+=second.runs;a.againstBalls+=bBalls;
- b.forRuns+=second.runs;b.forBalls+=bBalls;b.againstRuns+=first.runs;b.againstBalls+=aBalls;
+
+// ==================================================
+// 17. WIDE BALL
+// ==================================================
+
+async function wideBall() {
+
+    if (!isAdmin || state.matchEnded) return;
+
+    if (state.isOverWaiting) {
+        return alert("Select the next bowler first");
+    }
+
+    if (state.sIdx === null ||
+        state.nsIdx === null ||
+        state.bIdx === null) {
+        return alert("Assign players first");
+    }
+
+    const input = prompt(
+        "Additional completed runs on wide (excluding 1 penalty run):",
+        "0"
+    );
+
+    if (input === null || !/^\d+$/.test(input.trim())) return;
+
+    const extra = Number(input);
+
+    saveUndo();
+
+    state.runs += 1 + extra;
+
+    // All wide runs are charged to the bowler.
+    state.players[state.bIdx].rc += 1 + extra;
+
+    if (extra % 2 !== 0) swap();
+
+    const wasOut = runOutPrompt();
+
+    addBallHistory(wasOut ? "WD+W" : "WD" + (extra ? "+" + extra : ""));
+
+    // Wide is not a legal delivery.
+
+    render();
+    await syncToCloud();
+    checkLogic();
 }
-function nrr(p){const forRate=p.forBalls?p.forRuns/(p.forBalls/6):0,againstRate=p.againstBalls?p.againstRuns/(p.againstBalls/6):0;return forRate-againstRate;}
-function renderPoints(){
- const rows=state.tournamentTeams.map(t=>({team:t,...(state.points[t]||{})})).sort((a,b)=>b.points-a.points||nrr(b)-nrr(a)||b.won-a.won);
- return `<section class="card"><div class="row between"><div><div class="eyebrow">Tournament standings</div><h2>🏆 Points table</h2></div><button class="subtle" onclick="goHome()">← Back</button></div><div class="table-wrap"><table><thead><tr><th>Team</th><th>P</th><th>W</th><th>L</th><th>T/NR</th><th>Pts</th><th>NRR</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td><b>${i+1}. ${esc(r.team)}</b></td><td>${r.played||0}</td><td>${r.won||0}</td><td>${r.lost||0}</td><td>${(r.tied||0)+(r.nr||0)}</td><td><b>${r.points||0}</b></td><td>${nrr(r).toFixed(3)}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Set up teams to view standings.</td></tr>'}</tbody></table></div><p class="muted small">Win = 2 points · Tie/no result = 1 point · Loss = 0 points. NRR is calculated from recorded completed innings.</p></section>`;
+
+// ==================================================
+// 18. NO BALL
+// ==================================================
+
+async function noBall() {
+
+    if (!isAdmin || state.matchEnded) return;
+
+    if (state.isOverWaiting) {
+        return alert("Select the next bowler first");
+    }
+
+    if (state.sIdx === null ||
+        state.nsIdx === null ||
+        state.bIdx === null) {
+        return alert("Assign players first");
+    }
+
+    const input = prompt(
+        "Runs scored from bat on no-ball:",
+        "0"
+    );
+
+    if (input === null || !/^\d+$/.test(input.trim())) return;
+
+    const batRuns = Number(input);
+
+    saveUndo();
+
+    state.runs += 1 + batRuns;
+
+    // Batting runs belong to the striker.
+    state.players[state.sIdx].r += batRuns;
+
+    // No-ball does not count as a batter ball faced.
+    // Bowler is charged penalty plus bat runs.
+    state.players[state.bIdx].rc += 1 + batRuns;
+
+    if (batRuns % 2 !== 0) swap();
+
+    const wasOut = runOutPrompt();
+
+    addBallHistory(wasOut ? "NB+W" : "NB" + (batRuns ? "+" + batRuns : ""));
+
+    // No ball is not a legal delivery.
+
+    render();
+    await syncToCloud();
+    checkLogic();
 }
-function showPoints(){activeView='points';render();}
-function goHome(){activeView='home';render();}
-function backDashboard(){activeView='home';render();}
-function showScorecard(){activeView='scorecard';render();}
-function viewCompleted(mid){state.viewMatch=mid;showScorecard();}
-function renderScorecard(){
- const m=state.match&&(!state.viewMatch||state.viewMatch===state.match.id)?state.match:state.completedMatches.find(x=>x.id===state.viewMatch);
- if(!m){activeView='home';return renderViewer();}
- const innings=m.inningsData||[];
- return `<section class="card"><div class="row between"><div><div class="eyebrow">Match scorecard</div><h2>${esc(m.teamA)} vs ${esc(m.teamB)}</h2><p class="muted small">${esc(m.result||'Live match')}</p></div><button class="subtle" onclick="goHome()">← Back</button></div>${innings.map((inn,i)=>`<div class="card" style="margin:12px 0"><h3>Innings ${i+1} · ${esc(inn.team)}</h3><div class="score">${inn.runs}/${inn.wickets}</div><p class="muted small">Overs ${fmtOvers(inn.legalBalls)}</p><h3>Batting</h3><div class="table-wrap"><table><thead><tr><th>Batter</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>Dismissal</th></tr></thead><tbody>${(inn.batters||[]).map(p=>`<tr><td>${esc(p.name)}</td><td>${p.runs}</td><td>${p.balls}</td><td>${p.fours}</td><td>${p.sixes}</td><td>${esc(p.dismissal|| (p.isOut?'Out':'not out'))}</td></tr>`).join('')}</tbody></table></div><h3 style="margin-top:16px">Bowling</h3><div class="table-wrap"><table><thead><tr><th>Bowler</th><th>O</th><th>R</th><th>W</th></tr></thead><tbody>${(inn.bowlers||[]).map(p=>`<tr><td>${esc(p.name)}</td><td>${fmtOvers(p.legalBalls)}</td><td>${p.conceded}</td><td>${p.wickets}</td></tr>`).join('')}</tbody></table></div></div>`).join('')||'<div class="empty">Scorecard is available after an innings is completed.</div>'}</section>`;
+
+// ==================================================
+// 19. NORMAL WICKET
+// ==================================================
+
+async function handleWicket() {
+
+    if (!isAdmin || state.matchEnded) return;
+
+    if (state.isOverWaiting) {
+        return alert("Select the next bowler first");
+    }
+
+    if (state.sIdx === null ||
+        state.nsIdx === null ||
+        state.bIdx === null) {
+        return alert("Assign players first");
+    }
+
+    const dismissal = prompt(
+        "Enter dismissal: C = caught/bowled/LBW, R = run out",
+        "C"
+    );
+
+    if (dismissal === null) return;
+
+    const type = dismissal.trim().toUpperCase();
+
+    if (type !== "C" && type !== "R") {
+        alert("Enter C or R");
+        return;
+    }
+
+    saveUndo();
+
+    state.players[state.sIdx].b++;
+
+    if (type === "R") {
+        dismissBatter("S");
+    } else {
+        dismissBatter("S");
+        state.players[state.bIdx].w++;
+    }
+
+    state.players[state.bIdx].bb++;
+
+    legalBall();
+
+    addBallHistory(type === "R" ? "RO" : "W");
+
+    render();
+    await syncToCloud();
+    checkLogic();
 }
-function renderViewer(){
- const m=state.match;
- if(m&&!m.finished)return `<section class="card hero"><div class="eyebrow">${esc(state.tourneyName)}</div><h2>${esc(m.batTeam)} vs ${esc(m.bowlTeam)}</h2><span class="pill">LIVE · Innings ${m.innings}</span><div class="score">${m.runs}/${m.wickets}</div><p class="muted">Overs ${fmtOvers(m.legalBalls)} / ${m.overs}</p>${m.innings===2?`<p class="muted small">Target ${m.target} · Need ${Math.max(0,m.target-m.runs)}</p>`:''}<div class="balls">${m.balls.map(b=>`<span class="ball ${b==='W'?'wicket':['4','6'].includes(String(b))?'boundary':['WD','NB'].includes(b)?'extra':''}">${esc(b)}</span>`).join('')}</div><button class="subtle" style="margin-top:14px" onclick="showScorecard()">Scorecard</button></section>
- <section class="card"><div class="eyebrow">Live match</div><p class="muted small">This page refreshes from cloud data when JSONBin is configured. On this device, local updates appear automatically.</p></section>${viewerExtras()}`;
- const last=state.completedMatches[state.completedMatches.length-1];
- return `<section class="card hero"><div class="eyebrow">${esc(state.tourneyName)}</div><h2>${esc(state.tourneyName)}</h2><p class="muted">${state.tournamentTeams.length?'Tournament standings and fixtures':'Waiting for tournament setup…'}</p>${last?`<div class="scorebox"><b>${esc(last.teamA)} vs ${esc(last.teamB)}</b><p class="muted small">${esc(last.result)}</p><button class="subtle" onclick="viewCompleted('${last.id}')">View scorecard</button></div>`:'<div class="empty">Waiting for the next match to start.</div>'}</section>${viewerExtras()}`;
+
+// ==================================================
+// 20. MATCH LOGIC
+// ==================================================
+
+function checkLogic() {
+
+    if (!isAdmin || state.matchEnded) return;
+
+    const oversDone =
+        state.balls >= state.maxOvers * 6;
+
+    const battingPlayers =
+        state.players.filter(p => p.team === state.curBat);
+
+    const allOut =
+        state.wickers >= 10 ||
+        (battingPlayers.length > 0 &&
+         battingPlayers.every(p => p.isOut));
+
+    if (state.curInn === 2) {
+
+        if (state.runs >= state.target) {
+
+            finish(state.curBat,
+                state.curBat === state.batTeam ?
+                state.bowlTeam : state.batTeam);
+
+        } else if (oversDone || allOut) {
+
+            const winner =
+                state.curBat === state.batTeam ?
+                state.bowlTeam : state.batTeam;
+
+            finish(winner, state.curBat);
+        }
+
+    } else if (oversDone || allOut) {
+
+        startSecondInnings();
+    }
 }
-function viewerExtras(){
- return `<section class="card"><div class="row between"><h2>Fixtures</h2><button class="subtle" onclick="showPoints()">🏆 Points table</button></div>${state.fixtures.map(f=>`<div class="teamline"><b>${esc(f.teamA)} vs ${esc(f.teamB)}</b><span class="pill">${f.played?'Completed':'Upcoming'}</span></div>`).join('')||'<div class="empty">No fixtures published.</div>'}</section>`;
+
+// ==================================================
+// 21. SECOND INNINGS
+// ==================================================
+
+async function startSecondInnings() {
+
+    if (state.curInn !== 1 || state.matchEnded) return;
+
+    state.target = state.runs + 1;
+
+    state.curInn = 2;
+    state.curBat = state.bowlTeam;
+
+    state.runs = 0;
+    state.wickers = 0;
+    state.balls = 0;
+
+    state.sIdx = null;
+    state.nsIdx = null;
+    state.bIdx = null;
+
+    state.isOverWaiting = false;
+    state.recentBalls = [];
+
+    state.players.forEach(p => {
+        if (p.team === state.curBat) {
+            p.isOut = false;
+        }
+    });
+
+    activeAdminTeam = state.curBat;
+
+    alert("Second innings! Target: " + state.target);
+
+    render();
+    await syncToCloud();
 }
-function init(){
- saveLocal();
- if(JSONBIN_URL&&JSONBIN_MASTER_KEY)refreshCloud();
- render();
+
+// ==================================================
+// 22. FINISH MATCH
+// ==================================================
+
+async function finish(winner, loser) {
+
+    if (state.matchEnded) return;
+
+    state.matchEnded = true;
+
+    state.result = winner + " won";
+
+    if (state.points[winner]) {
+        state.points[winner].w++;
+        state.points[winner].p += 2;
+    }
+
+    if (state.points[loser]) {
+        state.points[loser].l++;
+    }
+
+    render();
+
+    await syncToCloud();
+
+    alert("Winner: " + winner);
 }
-window.addEventListener('load',init);
+
+// ==================================================
+// 23. PLAYER LIST
+// ==================================================
+
+function renderAdminList() {
+
+    const list = document.getElementById("adminPList");
+
+    list.innerHTML = "";
+
+    document.getElementById("adminTab1").innerText =
+        state.batTeam || "TEAM A";
+
+    document.getElementById("adminTab2").innerText =
+        state.bowlTeam || "TEAM B";
+
+    const players = state.players.filter(
+        p => p.team === activeAdminTeam
+    );
+
+    players.forEach(player => {
+
+        const index = state.players.indexOf(player);
+
+        const isBatting = player.team === state.curBat;
+
+        const row = document.createElement("div");
+
+        row.className =
+            "bg-slate-800 p-3 rounded-xl flex flex-wrap justify-between items-center gap-2";
+
+        const name = document.createElement("span");
+
+        name.className = "text-sm font-bold";
+
+        name.textContent =
+            player.name + (player.isOut ? " (OUT)" : "");
+
+        row.appendChild(name);
+
+        const controls = document.createElement("div");
+
+        controls.className = "flex gap-1";
+
+        function makeButton(text, role, color) {
+
+            const button = document.createElement("button");
+
+            button.textContent = text;
+
+            button.className =
+                color + " px-2 py-2 rounded-lg text-[10px] font-black";
+
+            button.onclick = () => setField(index, role);
+
+            controls.appendChild(button);
+        }
+
+        if (isBatting && !player.isOut) {
+
+            if (index !== state.sIdx) makeButton("STR", "S", "bg-blue-700");
+
+            if (index !== state.nsIdx) makeButton("NON", "NS", "bg-slate-600");
+
+        } else if (!isBatting && index !== state.bIdx) {
+
+            makeButton("BOWL", "B", "bg-red-700");
+        }
+
+        row.appendChild(controls);
+        list.appendChild(row);
+    });
+}
+
+// ==================================================
+// 24. SCORECARD
+// ==================================================
+
+function renderStats() {
+
+    const container =
+        document.getElementById("statsContent");
+
+    const teams = [state.batTeam, state.bowlTeam].filter(Boolean);
+
+    container.innerHTML = "";
+
+    teams.forEach(team => {
+
+        const players =
+            state.players.filter(p => p.team === team);
+
+        if (!players.length) return;
+
+        const card = document.createElement("div");
+
+        card.className = "panel p-4 mb-4";
+
+        const title = document.createElement("h3");
+
+        title.className =
+            "text-yellow-400 font-black text-sm mb-3";
+
+        title.textContent = team + " SCORECARD";
+
+        card.appendChild(title);
+
+        const table = document.createElement("table");
+
+        table.className = "text-xs";
+
+        table.innerHTML = `
+            <thead class="text-slate-400 border-b border-slate-600">
+                <tr>
+                    <th>BATTER</th>
+                    <th>R(B)</th>
+                    <th>W-R</th>
+                </tr>
+            </thead>
+        `;
+
+        const tbody = document.createElement("tbody");
+
+        players.forEach(p => {
+
+            const tr = document.createElement("tr");
+
+            const tdName = document.createElement("td");
+            tdName.textContent = p.name + (p.isOut ? " OUT" : "");
+
+            const tdRuns = document.createElement("td");
+            tdRuns.textContent = `${p.r}(${p.b})`;
+
+            const tdBowling = document.createElement("td");
+            tdBowling.textContent = `${p.w}-${p.rc}`;
+
+            tr.append(tdName, tdRuns, tdBowling);
+
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+        card.appendChild(table);
+        container.appendChild(card);
+    });
+}
+
+// ==================================================
+// 25. RECENT BALLS
+// ==================================================
+
+function renderBallHistory() {
+
+    const container =
+        document.getElementById("ballHistory");
+
+    container.innerHTML = "";
+
+    const balls = state.recentBalls || [];
+
+    if (!balls.length) {
+        container.textContent = "No balls yet";
+        container.className = "text-xs text-slate-500";
+        return;
+    }
+
+    balls.forEach(ball => {
+
+        const span = document.createElement("span");
+
+        span.className =
+            "bg-slate-700 px-3 py-2 rounded-lg font-bold";
+
+        span.textContent = ball;
+
+        container.appendChild(span);
+    });
+}
+
+// ==================================================
+// 26. POINTS TABLE
+// ==================================================
+
+function togglePoints() {
+
+    const tbody = document.getElementById("ptsBody");
+
+    tbody.innerHTML = "";
+
+    Object.keys(state.points).forEach(team => {
+
+        const point = state.points[team];
+
+        const tr = document.createElement("tr");
+
+        [team, point.w, point.l, point.p].forEach(value => {
+
+            const td = document.createElement("td");
+
+            td.textContent = value;
+
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById("pointsOverlay")
+        .classList.toggle("hidden");
+}
+
+// ==================================================
+// 27. CHANGE MATCH
+// ==================================================
+
+async function resetMatchOnly() {
+
+    if (!isAdmin) return;
+
+    if (!confirm("Change match? Current match data will be cleared.")) {
+        return;
+    }
+
+    state.batTeam = "";
+    state.bowlTeam = "";
+    state.curBat = "";
+
+    state.runs = 0;
+    state.wickers = 0;
+    state.balls = 0;
+
+    state.players = [];
+
+    state.sIdx = null;
+    state.nsIdx = null;
+    state.bIdx = null;
+
+    state.curInn = 1;
+    state.target = null;
+
+    state.isOverWaiting = false;
+    state.matchEnded = false;
+    state.result = "";
+
+    state.recentBalls = [];
+
+    history = [];
+
+    render();
+    await syncToCloud();
+
+    showMatchSelector();
+}
+
+// ==================================================
+// 28. TOTAL RESET
+// ==================================================
+
+async function fullSystemReset() {
+
+    if (!isAdmin) return;
+
+    if (!confirm("Delete the complete tournament and all scores?")) {
+        return;
+    }
+
+    saveUndo();
+
+    state = createInitialState();
+
+    history = [];
+
+    render();
+
+    await syncToCloud();
+
+    document.getElementById("scorerPanel")
+        .classList.add("hidden");
+
+    document.getElementById("setupOverlay")
+        .classList.remove("hidden");
+
+    document.getElementById("setupStep1")
+        .classList.remove("hidden");
+
+    document.getElementById("setupStep2")
+        .classList.add("hidden");
+}
+
+// ==================================================
+// 29. PUBLIC SCOREBOARD RENDER
+// ==================================================
+
+function updateHUD(nameId, statsId, index) {
+
+    const name = document.getElementById(nameId);
+    const stats = document.getElementById(statsId);
+
+    if (index !== null &&
+        state.players[index]) {
+
+        const player = state.players[index];
+
+        name.textContent = player.name;
+
+        stats.textContent =
+            `${player.r}(${player.b})`;
+
+    } else {
+
+        name.textContent = "---";
+        stats.textContent = "0(0)";
+    }
+}
+
+function render() {
+
+    const active =
+        Boolean(state.batTeam && state.bowlTeam);
+
+    document.getElementById("waitingState")
+        .classList.toggle("hidden", active);
+
+    document.getElementById("mainDashboard")
+        .classList.toggle("hidden", !active);
+
+    document.getElementById("matchStatus").innerText =
+        isAdmin ? "Admin Mode" : "Viewer Mode";
+
+    if (!active) {
+        document.getElementById("scorerPanel")
+            .classList.toggle("hidden", !isAdmin);
+        return;
+    }
+
+    document.getElementById("dispScore").innerText =
+        `${state.runs}/${state.wickers}`;
+
+    document.getElementById("dispOvers").innerText =
+        `${Math.floor(state.balls / 6)}.${state.balls % 6}`;
+
+    document.getElementById("limitOvers").innerText =
+        state.maxOvers;
+
+    document.getElementById("batTeamDisp").innerText =
+        state.curBat;
+
+    document.getElementById("inningsLabel").innerText =
+        state.curInn === 1 ? "First Innings" : "Second Innings";
+
+    document.getElementById("targetBox")
+        .classList.toggle("hidden", state.curInn !== 2);
+
+    document.getElementById("targetVal").innerText =
+        state.target || 0;
+
+    document.getElementById("resultLabel")
+        .classList.toggle("hidden", !state.matchEnded);
+
+    document.getElementById("resultLabel").innerText =
+        state.result || "";
+
+    updateHUD("dispSName", "dispSStats", state.sIdx);
+
+    updateHUD("dispNSName", "dispNSStats", state.nsIdx);
+
+    const bowler =
+        state.bIdx !== null ? state.players[state.bIdx] : null;
+
+    document.getElementById("dispBName").innerText =
+        bowler ? bowler.name : "---";
+
+    document.getElementById("dispBStats").innerText =
+        bowler ?
+        `${bowler.w}-${bowler.rc} (${Math.floor(bowler.bb / 6)}.${bowler.bb % 6})`
+        : "0-0 (0.0)";
+
+    const locked =
+        !isAdmin || state.isOverWaiting || state.matchEnded;
+
+    document.querySelectorAll("#btnGrid button").forEach(button => {
+        button.disabled = locked;
+    });
+
+    document.getElementById("overWarning")
+        .classList.toggle("hidden", !state.isOverWaiting);
+
+    document.getElementById("scorerPanel")
+        .classList.toggle("hidden", !isAdmin);
+
+    renderBallHistory();
+    renderStats();
+
+    if (isAdmin) renderAdminList();
+}
+
+// ==================================================
+// 30. INITIAL LOAD
+// ==================================================
+
+render();
+autoRefresh();
+
 </script>
+
 </body>
 </html>
